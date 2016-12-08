@@ -1,2 +1,3 @@
 # ozanmuyes.github.io
-Personal portfolio page and blog
+
+Personal portfolio and blog site

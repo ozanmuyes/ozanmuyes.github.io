@@ -8,7 +8,7 @@ const blogCollection = defineCollection({
     image: z.string().optional(),
     // publishedAt: z.string().datetime().optional(),
     publishedAt: z.date().optional(),
-    updatedAt: z.string().datetime().optional(),
+    updatedAt: z.date().optional(),
     isFeatured: z.boolean().default(false),
     excerpt: z.string().optional(),
   }),

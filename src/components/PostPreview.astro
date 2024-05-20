@@ -10,7 +10,7 @@ type Props = {
 };
 
 const { post, class: className, headingLevel = "h2" } = Astro.props;
-const { title, publishDate, updatedDate, excerpt } = post.data;
+const { title, publishedAt, updatedAt, excerpt } = post.data;
 const TitleTag = headingLevel;
 ---
 
@@ -25,13 +25,13 @@ const TitleTag = headingLevel;
       {title}
     </TitleTag>
     <div class="mt-1 text-sm leading-normal">
-      <FormattedDate date={publishDate} />
+      <FormattedDate date={publishedAt} />
       {
-        updatedDate && (
+        updatedAt && (
           <>
             {" "}
             <span>
-              (Updated on <FormattedDate date={updatedDate} />)
+              (Updated on <FormattedDate date={updatedAt} />)
             </span>
           </>
         )

@@ -36,9 +36,14 @@ const {
   publishedAt,
   updatedAt,
   excerpt,
-  tags = [] /* seo */,
+  tags = [],
+  // seo
 } = post.data;
-const seo = undefined;
+const seo = {
+  title: undefined,
+  description: undefined,
+  image: undefined,
+};
 
 const { Content } = await post.render();
 ---

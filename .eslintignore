@@ -8,3 +8,4 @@ coverage
 /.*rc.cjs
 /.*rc.mjs
 /*.config.mjs
+/src/env.d.ts

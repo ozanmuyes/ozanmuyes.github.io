@@ -1,16 +1,56 @@
 ---
+import { getCollection } from "astro:content";
+import { sortItemsByDateDesc } from "../utils/data-utils";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import siteConfig from "../data/site-config";
+// import ProjectPreview from "../components/ProjectPreview.astro";
+import Hero from "../components/Hero.astro";
+import Button from "../components/Button.astro";
+import PostPreview from "../components/PostPreview.astro";
 
+const posts = (await getCollection("blog")).sort(sortItemsByDateDesc);
+const featuredPosts = posts.filter(
+  ({ data }) => data.publishedAt && data.isFeatured,
+);
+
+// const projects = (await getCollection("projects")).sort(sortItemsByDateDesc);
+// const featuredProjects = projects.filter(({ data }) => data.isFeatured);
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Ozan Müyesseroğlu</title>
-  </head>
-  <body>
-    <h1>Ozan Müyesseroğlu</h1>
-  </body>
-</html>
+<BaseLayout description={siteConfig.description} image={siteConfig.image}>
+  <Hero />
+  <!-- {
+    featuredProjects?.length > 0 && (
+      <div class="mb-16 sm:mb-24">
+        <h2 class="mb-12 text-xl font-serif italic sm:mb-16 sm:text-2xl">
+          Projects
+        </h2>
+        {featuredProjects.map((project) => (
+          <ProjectPreview
+            project={project}
+            class="mb-10 sm:mb-12"
+            headingLevel="h3"
+          />
+        ))}
+        <div class="mt-12 sm:mt-16">
+          <Button href="/projects">View All Projects</Button>
+        </div>
+      </div>
+    )
+  } -->
+  {
+    featuredPosts?.length > 0 && (
+      <div class="mb-16 sm:mb-24">
+        <h2 class="mb-12 text-xl font-serif italic sm:mb-16 sm:text-2xl">
+          Writing
+        </h2>
+        {featuredPosts.map((post) => (
+          <PostPreview post={post} class="mb-10 sm:mb-12" headingLevel="h3" />
+        ))}
+        <div class="mt-12 sm:mt-16">
+          <Button href="/blog">View All Posts</Button>
+        </div>
+      </div>
+    )
+  }</BaseLayout
+>

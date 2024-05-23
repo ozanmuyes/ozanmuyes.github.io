@@ -12,7 +12,7 @@ export type Props = {
 const {
   description = "",
   image = siteConfig.image,
-  pageType = "website",
+  pageType = "article",
 } = Astro.props;
 const title = [Astro.props.title, siteConfig.title].filter(Boolean).join(" | ");
 const resolvedImage = image?.src
@@ -59,14 +59,15 @@ function formatCanonicalURL(url: string | URL) {
 
 <!-- Page Metadata -->
 <link rel="canonical" href={formatCanonicalURL(canonicalURL)} />
+<meta name="author" content="Ozan Müyesseroğlu" />
 <meta name="description" content={description} />
 
 <!-- Open Graph / Facebook -->
-<meta property="og:type" content={pageType} />
-<meta property="og:url" content={formatCanonicalURL(canonicalURL)} />
 <meta property="og:title" content={title} />
-<meta property="og:description" content={description} />
+<meta property="og:type" content={pageType} />
 {resolvedImage?.src && <meta property="og:image" content={resolvedImage.src} />}
+<meta property="og:url" content={formatCanonicalURL(canonicalURL)} />
+<meta property="og:description" content={description} />
 {
   resolvedImage?.alt && (
     <meta property="og:image:alt" content={resolvedImage.alt} />

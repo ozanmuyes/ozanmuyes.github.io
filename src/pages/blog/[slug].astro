@@ -11,7 +11,6 @@ export async function getStaticPaths() {
   const posts = (await getCollection("blog"))
     .filter(({ data }) => data.publishedAt)
     .sort(sortItemsByDateDesc);
-  console.log(posts);
   const postCount = posts.length;
   return posts.map((post, index) => ({
     params: { slug: post.slug },
@@ -31,26 +30,14 @@ type Props = {
 
 const { href } = Astro.url;
 const { post, prevPost, nextPost } = Astro.props;
-const {
-  title,
-  publishedAt,
-  updatedAt,
-  excerpt,
-  tags = [],
-  // seo
-} = post.data;
-const seo = {
-  title: undefined,
-  description: undefined,
-  image: undefined,
-};
+const { title, publishedAt, updatedAt, excerpt, tags = [], seo } = post.data;
 
 const { Content } = await post.render();
 ---
 
 <BaseLayout
-  title={seo?.title ?? title}
-  description={seo?.description ?? excerpt}
+  title={title}
+  description={excerpt}
   image={seo?.image}
   pageType="article"
   showHeader={false}

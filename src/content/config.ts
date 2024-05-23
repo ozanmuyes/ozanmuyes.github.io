@@ -1,6 +1,16 @@
 import { defineCollection, z } from "astro:content";
 
-const blogCollection = defineCollection({
+const seoSchema = z.object({
+  image: z
+    .object({
+      src: z.string(),
+      alt: z.string().optional(),
+    })
+    .optional(),
+  pageType: z.enum(["website", "article"]).default("article"),
+});
+
+const blog = defineCollection({
   type: "content",
   schema: z.object({
     title: z.string().min(2).max(1024),
@@ -11,9 +21,18 @@ const blogCollection = defineCollection({
     updatedAt: z.date().optional(),
     isFeatured: z.boolean().default(false),
     excerpt: z.string().optional(),
+    seo: seoSchema.optional(),
+  }),
+});
+
+const pages = defineCollection({
+  schema: z.object({
+    title: z.string(),
+    seo: seoSchema.optional(),
   }),
 });
 
 export const collections = {
-  blog: blogCollection,
+  blog,
+  pages,
 };

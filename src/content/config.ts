@@ -1,4 +1,4 @@
-import { defineCollection, z } from "astro:content";
+import { defineCollection, reference, z } from "astro:content";
 
 const seoSchema = z.object({
   image: z
@@ -10,18 +10,30 @@ const seoSchema = z.object({
   pageType: z.enum(["website", "article"]).default("article"),
 });
 
+const blogSchema = z.object({
+  title: z.string().min(2).max(1024),
+  tags: z.string().array().min(1, "At least 1 tag required for a blog post."),
+  image: z.string().optional(),
+  // publishedAt: z.string().datetime().optional(),
+  publishedAt: z.date().optional(),
+  updatedAt: z.date().optional(),
+  isFeatured: z.boolean().default(false),
+  excerpt: z.string().optional(),
+  seo: seoSchema.optional(),
+});
+
 const blog = defineCollection({
   type: "content",
-  schema: z.object({
-    title: z.string().min(2).max(1024),
-    tags: z.string().array().min(1, "At least 1 tag required for a blog post."),
-    image: z.string().optional(),
-    // publishedAt: z.string().datetime().optional(),
-    publishedAt: z.date().optional(),
-    updatedAt: z.date().optional(),
-    isFeatured: z.boolean().default(false),
-    excerpt: z.string().optional(),
-    seo: seoSchema.optional(),
+  schema: blogSchema,
+});
+
+const series = defineCollection({
+  type: "content",
+  schema: blogSchema.extend({
+    tags: z.undefined(),
+    isFeatured: z.undefined(),
+    previousPost: reference("series").optional(),
+    nextPost: reference("series").optional(),
   }),
 });
 
@@ -34,5 +46,6 @@ const pages = defineCollection({
 
 export const collections = {
   blog,
+  series,
   pages,
 };

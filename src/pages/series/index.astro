@@ -1,0 +1,27 @@
+---
+import { getCollection } from "astro:content";
+
+// TODO This page works BUT maybe needs refinement
+
+const seriesPosts = await getCollection("series");
+const _seriesNames = new Set();
+//
+
+seriesPosts.forEach((seriesPost) => {
+  _seriesNames.add(seriesPost.slug.split("/")[0]);
+  //
+});
+
+const seriesNames = [..._seriesNames];
+---
+
+<!-- FIXME better UI -->
+<ul>
+  {
+    seriesNames.map((seriesName) => (
+      <li>
+        <a href={`series/${seriesName}`}>{seriesName}</a>
+      </li>
+    ))
+  }
+</ul>

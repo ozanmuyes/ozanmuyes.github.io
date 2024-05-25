@@ -1,0 +1,24 @@
+---
+import { getCollection } from "astro:content";
+
+// TODO This page works BUT maybe needs refinement
+
+export async function getStaticPaths() {
+  const seriesPosts = await getCollection("series");
+
+  return seriesPosts.map((seriesPost) => {
+    // console.log(seriesPost);
+    return {
+      params: {
+        slug: seriesPost.slug.split("/")[0],
+      },
+    };
+  });
+}
+
+const { slug } = Astro.params;
+---
+
+<!-- FIXME better UI -->
+<div>All posts for series <span style="color: red">{slug}</span></div>
+<!-- FIXME list posts: at this point this (index.astro) very much like in the individual post page ([..page].astro), SO maybe we DO NOT need this file and handle "posts listing (for subcoll, e.g. llm, rust)" on the [..page.astro]? -->

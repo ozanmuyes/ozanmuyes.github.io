@@ -2,8 +2,8 @@ import { type CollectionEntry } from "astro:content";
 import { slugify } from "./common-utils";
 
 export function sortItemsByDateDesc(
-  itemA: CollectionEntry<"blog" /*  | "projects" */>,
-  itemB: CollectionEntry<"blog" /*  | "projects" */>,
+  itemA: CollectionEntry<"blog" | "series" /* "projects" */>,
+  itemB: CollectionEntry<"blog" | "series" /* "projects" */>,
 ) {
   // TODO check these
   if (!itemA.data.publishedAt) {

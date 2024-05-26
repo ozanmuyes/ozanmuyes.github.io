@@ -21,7 +21,12 @@ const { showHeader = true, ...head } = Astro.props;
         document.documentElement.classList.add("dark");
       }
     </script>
-    <!-- FIXME <ViewTransitions /> -->
+
+    <!-- <ViewTransitions /> -->
+    <script>
+      // NOTE If ViewTransitions component above is uncommented, comment this script
+      document.dispatchEvent(new Event("astro:page-load"));
+    </script>
   </head>
   <body class="bg-main text-main">
     <div class="flex flex-col min-h-screen px-4 md:px-8">

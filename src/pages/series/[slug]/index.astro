@@ -1,24 +1,51 @@
 ---
-import { getCollection } from "astro:content";
-
 // TODO This page works BUT maybe needs refinement
 
 export async function getStaticPaths() {
-  const seriesPosts = await getCollection("series");
+  const seriesPosts = await Astro.glob("../../../content/series/**/*.md");
 
-  return seriesPosts.map((seriesPost) => {
-    // console.log(seriesPost);
-    return {
-      params: {
-        slug: seriesPost.slug.split("/")[0],
-      },
-    };
-  });
+  const sluggedSeriesPosts = seriesPosts.reduce((acc, curr) => {
+    const _relContentSeries = curr.file.substring(
+      curr.file.indexOf("/series/") + "/series/".length,
+      curr.file.lastIndexOf(".md"),
+    );
+    const [currSlug, currPage] = _relContentSeries
+      .replace(/\/+$/, "")
+      .split(/\/(.*)/s);
+
+    if (!Object.prototype.hasOwnProperty.call(acc, currSlug)) {
+      acc[currSlug] = [];
+    }
+
+    acc[currSlug].push({ _slug: currPage, ...curr });
+
+    return acc;
+  }, {});
+
+  return Object.entries(sluggedSeriesPosts).map(([slug, posts]) => ({
+    params: { slug },
+    props: {
+      // postFrontmatters: posts.map(({ frontmatter }) => frontmatter),
+      posts,
+    },
+  }));
 }
 
 const { slug } = Astro.params;
+const { posts } = Astro.props;
 ---
+
+<a href="/series">&lt;&dash; See All Series</a>
 
 <!-- FIXME better UI -->
 <div>All posts for series <span style="color: red">{slug}</span></div>
-<!-- FIXME list posts: at this point this (index.astro) very much like in the individual post page ([..page].astro), SO maybe we DO NOT need this file and handle "posts listing (for subcoll, e.g. llm, rust)" on the [..page.astro]? -->
+
+<ul>
+  {
+    posts.map(({ frontmatter, _slug: postSlug }) => (
+      <li>
+        <a href={`/series/${slug}/${postSlug}`}>{frontmatter.title}</a>
+      </li>
+    ))
+  }
+</ul>

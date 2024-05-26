@@ -32,8 +32,8 @@ const series = defineCollection({
   schema: blogSchema.extend({
     tags: z.undefined(),
     isFeatured: z.undefined(),
-    previousPost: reference("series").optional(),
     nextPost: reference("series").optional(),
+    previousPost: reference("series").optional(),
   }),
 });
 

@@ -1,68 +1,62 @@
 ---
-import {
-  type CollectionEntry,
-  type ContentEntryMap,
-  getCollection,
-} from "astro:content";
+import { getCollection, getEntry, type CollectionEntry } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
-import FormattedDate from "../../../components/FormattedDate.astro";
 import Button from "../../../components/Button.astro";
-
-// FIXME extract this to somewhere else
-type _ResItem<C extends keyof ContentEntryMap> = CollectionEntry<C> & {
-  _nestedPath: string;
-};
-type _Res<C extends keyof ContentEntryMap> = Record<string, Array<_ResItem<C>>>;
-export function _TODO_foo<C extends keyof ContentEntryMap>(
-  collection: Array<CollectionEntry<C>>,
-): _Res<C> {
-  const res: _Res<C> = {};
-
-  collection.forEach((item) => {
-    const [slug, rest] = item.slug.replace(/\/+$/, "").split(/\/(.*)/s);
-
-    if (!Object.prototype.hasOwnProperty.call(res, slug)) {
-      res[slug] = [];
-    }
-
-    res[slug].push({
-      _nestedPath: rest,
-      ...item,
-    });
-  });
-
-  return res;
-}
+import FormattedDate from "../../../components/FormattedDate.astro";
+import PostPreview from "../../../components/PostPreview.astro";
 
 export async function getStaticPaths() {
   const seriesPosts = await getCollection("series");
 
-  return Object.entries(_TODO_foo(seriesPosts)).flatMap(
-    ([subCollName /* e.g. "llm", "rust" */, subCollPosts]) =>
-      subCollPosts.flatMap((subCollPost) => ({
-        params: {
-          slug: subCollName,
-          page: subCollPost._nestedPath,
-        },
-        props: { post: subCollPost },
-      })),
-  );
+  const promises = seriesPosts.map((post) => {
+    if (post.data.nextPost) {
+      return new Promise((resolve, reject) => {
+        getEntry(post.data.nextPost!)
+          .then((nextPostWData) => {
+            post.data.nextPost = nextPostWData;
+            resolve(post);
+          })
+          .catch(reject);
+      });
+    }
+
+    return post;
+  });
+  const _res = (await Promise.all(promises)) as Array<
+    CollectionEntry<"series">
+  >;
+
+  return _res.map((post, i) => {
+    const [slug, page] = post.slug.replace(/\/+$/, "").split(/\/(.*)/s);
+
+    // FIXME See http://localhost:4321/series/llm/what-is-llm
+    //       prev and next is the SAME!!1
+    if (i > 0 && _res[i - 1].slug.startsWith(slug)) {
+      post.data.previousPost = _res[i - 1];
+    }
+
+    return {
+      params: { slug, page },
+      props: { post },
+    };
+  });
 }
 
-type Props = {
-  post: CollectionEntry<"series">;
-  // prevPost: CollectionEntry<"series">;
-  // nextPost: CollectionEntry<"series">;
-};
-
 const { href } = Astro.url;
-const { post /* , prevPost, nextPost */ } = Astro.props;
-const { title, publishedAt, updatedAt, excerpt, tags = [], seo } = post.data;
+const { post } = Astro.props;
+const { title, publishedAt, updatedAt, excerpt, seo, nextPost, previousPost } =
+  post.data;
 
 const { Content } = await post.render();
 ---
 
-<BaseLayout>
+<BaseLayout
+  title={`${title} | ${Astro.params.slug}`}
+  description={excerpt}
+  image={seo?.image}
+  pageType="article"
+  showHeader={false}
+>
   <article class="mb-16 sm:mb-24">
     <!-- FIXME better wording for the link -->
     <a href={`/series/${Astro.params.slug}`} class="pb-16"
@@ -94,8 +88,78 @@ const { Content } = await post.render();
       <Content />
     </div>
 
-    <!-- TODO cont. with src/pages/blog/[slug].astro:71 (`mt-8 flex flex-wrap items-center`...) -->
+    <div
+      class="mt-8 flex flex-wrap items-center gap-6 text-sm justify-between sm:mt-12 sm:text-base"
+    >
+      <!-- NOTE No tags for series posts -->
+
+      <Button
+        class="copy-url-button"
+        aria-label="Copy link"
+        data-url={href}
+        data-tooltip-default="Copy link"
+        data-tooltip-success="Copied">Share</Button
+      >
+    </div>
   </article>
 
-  <!-- FIXME prev / next -->
+  {
+    (previousPost || nextPost) && (
+      <div class="my-16 sm:my-24">
+        {previousPost && (
+          <div>
+            <h2 class="mb-3 text-xl font-serif italic sm:mb-4 sm:text-2xl">
+              Read Previous Post
+            </h2>
+
+            <PostPreview
+              post={previousPost}
+              class="mb-10 sm:mb-12"
+              headingLevel="h3"
+              showReadPostWithArrow={false}
+            />
+          </div>
+        )}
+
+        {nextPost && (
+          <div style="text-align: right;">
+            <h2 class="mb-3 text-xl font-serif italic sm:mb-4 sm:text-2xl">
+              Read Next Post
+            </h2>
+
+            <PostPreview
+              post={nextPost}
+              class="mb-10 sm:mb-12"
+              headingLevel="h3"
+              showReadPostWithArrow={false}
+            />
+          </div>
+        )}
+      </div>
+    )
+  }
 </BaseLayout>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const copyUrlButton = document.querySelector(
+      ".copy-url-button",
+    ) as HTMLButtonElement;
+    copyUrlButton?.addEventListener("click", async () => {
+      await copyUrl(copyUrlButton);
+    });
+
+    async function copyUrl(button: HTMLButtonElement) {
+      let url = button.getAttribute("data-url") || "";
+      let label = button.innerText;
+
+      await navigator.clipboard.writeText(url);
+
+      button.innerText = "Copied";
+
+      setTimeout(() => {
+        button.innerText = label;
+      }, 2500);
+    }
+  });
+</script>

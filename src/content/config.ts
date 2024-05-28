@@ -8,6 +8,8 @@ const seoSchema = z.object({
     })
     .optional(),
   pageType: z.enum(["website", "article"]).default("article"),
+  title: z.string().optional(),
+  description: z.string().optional(),
 });
 
 const blogSchema = z.object({

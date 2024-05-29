@@ -12,7 +12,6 @@ export type Link = {
 export type Hero = {
   title?: string;
   text?: string;
-  image?: Image;
   actions?: Link[];
 };
 
@@ -75,10 +74,10 @@ const siteConfig: SiteConfig = {
     },
   ],
   footerNavLinks: [
-    {
-      text: "About",
-      href: "/about",
-    },
+    // {
+    //   text: "About",
+    //   href: "/about",
+    // },
     {
       text: "Contact",
       href: "/contact",
@@ -100,8 +99,7 @@ const siteConfig: SiteConfig = {
   ],
   hero: {
     title: "Hi there and welcome to my corner of the Web!",
-    text: "I'm **Ozan Müyesseroğlu**, a detail-oriented computer engineer with a Bachelor of Science degree. I leverage my skills in software development to drive innovative projects forward. With expertise in back-end development and a growing interest in computer vision and LLMs (Large Language Models, e.g. GPT), I'm excited to apply my knowledge to meaningful impact. As a strong communicator, I excel in verbal communication, with the ability to lead and mentor junior and mid-level team members.<br>Feel free to explore some of my coding endeavors on <a href='https://github.com/JustGoodUI/dante-astro-theme'>GitHub</a> or follow me on <a href='https://twitter.com/justgoodui'>Twitter/X</a>.",
-    image: image.high,
+    text: "I'm **Ozan Müyesseroğlu**, a detail-oriented computer engineer with a Bachelor of Science degree. I leverage my skills in software development to drive innovative projects forward. With expertise in back-end development and a growing interest in computer vision and LLMs (Large Language Models, e.g. GPT), I'm excited to apply my knowledge to meaningful impact. As a strong communicator, I excel in verbal communication, with the ability to lead and mentor junior and mid-level team members.<br>Feel free to explore some of my coding endeavors on <a href='https://github.com/ozanmuyes'>GitHub</a> or follow me on <a href='https://www.linkedin.com/in/ozanmuyes/'>LinkedIn</a>.",
     actions: [
       {
         text: "Get in Touch",

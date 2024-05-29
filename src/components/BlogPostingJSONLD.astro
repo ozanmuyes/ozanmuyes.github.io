@@ -1,0 +1,33 @@
+---
+import { type InferEntrySchema } from "astro:content";
+
+type Props = Omit<InferEntrySchema<"blog" | "series">, "isFeatured">;
+
+const { title, excerpt, publishedAt, updatedAt, tags } = Astro.props;
+
+// FIXME consider `Astro.props.seo`
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: title,
+  description: excerpt,
+  keywords: tags,
+  author: {
+    "@type": "Person",
+    name: "Ozan Müyesseroğlu",
+    url: "https://ozanmuyes.com",
+  },
+  ...(publishedAt && {
+    datePublished: publishedAt.toISOString(),
+  }),
+  ...(updatedAt && { dateModified: updatedAt.toISOString() }),
+};
+---
+
+{/* eslint-disable astro/no-set-html-directive */}
+<script
+  is:inline
+  type="application/ld+json"
+  set:html={JSON.stringify(schema)}
+/>
+{/* eslint-enable astro/no-set-html-directive */}

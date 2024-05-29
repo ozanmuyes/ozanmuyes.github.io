@@ -1,43 +1,37 @@
 ---
+import { Image } from "astro:assets";
 import { marked } from "marked";
 import Button from "./Button.astro";
 import siteConfig from "../data/site-config";
+import heroImage from "../images/hero-high.jpg";
 
 const hero = siteConfig.hero;
 ---
 
 {
   (hero?.title ||
-    hero?.image?.src ||
+    /* hero?.image?.src || */
     hero?.text ||
     (hero?.actions && hero.actions.length > 0)) && (
-    <section class="w-full flex flex-col gap-8 mb-16 sm:mb-24">
+    <section class="mb-16 flex w-full flex-col gap-8 sm:mb-24">
       {hero.title && (
-        <h1 class="text-3xl leading-tight font-serif font-medium sm:text-5xl sm:leading-tight">
+        <h1 class="font-serif text-3xl font-medium leading-tight sm:text-5xl sm:leading-tight">
           {hero.title}
         </h1>
       )}
-      {hero.image?.src && (
-        <figure>
-          <img
-            class="w-full"
-            src={hero.image.src}
-            decoding="async"
-            alt={hero.image.alt || ""}
-          />
-          {hero.image.caption && (
-            <figcaption class="mt-1.5 text-xs sm:text-sm">
-              {hero.image.caption}
-            </figcaption>
-          )}
-        </figure>
-      )}
+      <Image
+        src={heroImage}
+        alt="Ozan Müyesseroğlu sitting at a desk in front of a computer"
+        loading="eager"
+      />
+      {/* eslint-disable astro/no-set-html-directive */}
       {hero.text && (
         <div
-          class="max-w-none prose prose-dante sm:prose-lg"
+          class="prose prose-dante max-w-none sm:prose-lg"
           set:html={marked.parse(hero.text)}
         />
       )}
+      {/* eslint-enable astro/no-set-html-directive */}
       {hero.actions && hero.actions.length > 0 && (
         <div class="flex flex-wrap gap-4">
           {hero.actions.map((action) => (

@@ -12,3 +12,9 @@
 1. Run `pnpm i`
 
 If you use VSCode / VSCodium as your IDE then it is highly advised to install recommended extensions. Please refer to the [documentation](https://code.visualstudio.com/docs/editor/extension-marketplace#_recommended-extensions).
+
+## Resources
+
+* [Prevent dark mode from flickering on page load in Astrojs](https://axellarsson.com/blog/astrojs-prevent-dark-mode-flicker/)
+* [Optimize web fonts | Self-host your web fonts](https://web.dev/learn/performance/optimize-web-fonts#self-host_your_web_fonts)
+* [Adding structured data to blog posts using Astro](https://frodeflaten.com/posts/adding-structured-data-to-blog-posts-using-astro/)

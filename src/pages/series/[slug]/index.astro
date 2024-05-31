@@ -2,6 +2,8 @@
 // @ts-nocheck
 
 import type { CollectionEntry } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import PostPreview from "../../../components/PostPreview.astro";
 
 // TODO This page works BUT maybe needs refinement
 
@@ -39,17 +41,33 @@ const { slug } = Astro.params;
 const { posts } = Astro.props;
 ---
 
-<a href="/series">&lt;&dash; See All Series</a>
+<BaseLayout
+  title={`${slug} | Series`}
+  description={`Read through the posts for series ${slug}`}
+  showHeader={false}
+>
+  <a href="/series">&lt;&dash;&nbsp;View all series</a>
 
-<!-- FIXME better UI -->
-<div>All posts for series <span style="color: red">{slug}</span></div>
+  <h1
+    class="mb-12 font-serif text-2xl italic leading-tight sm:mb-16 sm:text-4xl"
+  >
+    All posts for series "{slug}"
+  </h1>
 
-<ul>
-  {
-    posts.map(({ frontmatter, _slug: postSlug }) => (
-      <li>
-        <a href={`/series/${slug}/${postSlug}`}>{frontmatter.title}</a>
-      </li>
-    ))
-  }
-</ul>
+  <ol>
+    {
+      posts.map(({ frontmatter, _slug: postSlug }) => (
+        <li>
+          <PostPreview
+            post={{
+              data: frontmatter,
+              collection: "series",
+              slug: `${slug}/${postSlug}`,
+            }}
+            class="mb-10 sm:mb-12"
+          />
+        </li>
+      ))
+    }
+  </ol>
+</BaseLayout>

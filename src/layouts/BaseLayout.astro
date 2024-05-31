@@ -6,6 +6,7 @@ import BaseHead, {
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import Nav from "../components/Nav.astro";
+import SkipToLink from "../components/SkipToLink.astro";
 
 export type Props = HeadProps & { showHeader?: boolean };
 
@@ -34,10 +35,11 @@ const { showHeader = true, ...head } = Astro.props;
     <slot name="head" />
   </head>
   <body class="bg-main text-main">
+    <SkipToLink />
     <div class="flex min-h-screen flex-col px-4 md:px-8">
       <Nav />
       {showHeader && <Header />}
-      <main class="mx-auto w-full max-w-3xl grow">
+      <main id="main" class="mx-auto w-full max-w-3xl grow">
         <slot />
       </main>
       <Footer />

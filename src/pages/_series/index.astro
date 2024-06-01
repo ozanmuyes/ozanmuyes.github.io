@@ -1,7 +1,8 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection /* , type CollectionEntry */ } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import Pagination from "../../components/Pagination.astro";
+// import Pagination from "../../components/Pagination.astro";
+// import type { Page } from "astro";
 
 // TODO This page works BUT maybe needs refinement
 
@@ -15,6 +16,12 @@ seriesPosts.forEach((seriesPost) => {
 });
 
 const seriesNames = [..._seriesNames];
+
+// type Props = { page: Page<CollectionEntry<"series">> };
+
+// const { page } = Astro.props;
+
+// console.log(page);
 
 // From https://github.com/JustGoodUI/dante-astro-theme/blob/main/src/pages/projects/%5B...page%5D.astro
 ---
@@ -40,5 +47,5 @@ const seriesNames = [..._seriesNames];
     }
   </ul>
 
-  <!-- <Pagination page={page} class="my-16 sm:my-24" /> -->
+  <!-- MAYBE <Pagination page={page} class="my-16 sm:my-24" /> OR let all the tags listed in 1 HTML file (how many of them at most after all?) -->
 </BaseLayout>

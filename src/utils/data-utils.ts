@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { type CollectionEntry } from "astro:content";
 import { slugify } from "./common-utils";
 

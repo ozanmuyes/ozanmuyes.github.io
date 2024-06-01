@@ -25,14 +25,14 @@ const { showHeader = true, ...head } = Astro.props;
       }
     </script>
 
-    <!-- <ViewTransitions /> -->
-    <script>
+    <ViewTransitions />
+    <!-- <script>
       // NOTE If ViewTransitions component above is uncommented, comment this script
       setTimeout(
         () => document.dispatchEvent(new Event("astro:page-load")),
         200,
       );
-    </script>
+    </script> -->
 
     <slot name="head" />
   </head>

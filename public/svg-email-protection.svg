@@ -18,7 +18,7 @@
 
       text {
         font-size: 16px;
-        fill: rgb(0, 0, 255);
+        fill: rgb(0, 0, 0);
         pointer-events: none;
       }
 
